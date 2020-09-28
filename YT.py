@@ -1,6 +1,6 @@
 from selenium import webdriver
 import time
-import os
+# import os
 import pyautogui
 import random
 
