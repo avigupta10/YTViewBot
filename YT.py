@@ -22,7 +22,7 @@ def ip_change():
     print('using', ip)
     pyautogui.typewrite('netsh interface ipv4 set address name="Wi-Fi" static ' + ip)
     pyautogui.press('enter')
-    print('sad')
+    print(f'ip successfully changed to {ip}')
 
 
 link = str(input("Enter the URL of the Youtube Video: "))
