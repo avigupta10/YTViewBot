@@ -1,6 +1,7 @@
 from selenium import webdriver
 import time
-# import os
+import os
+import platform
 import pyautogui
 import random
 
@@ -16,26 +17,50 @@ ips = ['192.168.1.1',
        '192.168.254.254']
 
 
-def ip_change():
+def ip_change_macos():
+    random.shuffle(ips)
+    ip = ips[random.randrange(0, len(ips))]
+    print('using', ip)
+    os.system(f'networksetup -setmanual "Wi-Fi" {ip}')
+
+
+def ip_change_linux():
+    random.shuffle(ips)
+    ip = ips[random.randrange(0, len(ips))]
+    print('using', ip)
+    os.system(f'ifconfig eth0 {ip} netmask 255.255.255.0 up')
+
+
+def ip_change_windows():
     random.shuffle(ips)
     ip = ips[random.randrange(0, len(ips))]
     print('using', ip)
     pyautogui.typewrite('netsh interface ipv4 set address name="Wi-Fi" static ' + ip)
     pyautogui.press('enter')
-    print(f'ip successfully changed to {ip}')
+    print('ip changed successfully')
 
 
-link = str(input("Enter the URL of the Youtube Video: "))
-Timer = int(input("Enter the number of seconds you want: "))
+try:
+    link = str(input("Enter the URL of the Youtube Video: "))
+    Timer = int(input("Enter the number of seconds you want: "))
 
-views = int(input('Enter the number of views you want: '))
+    views = int(input('Enter the number of views you want: '))
 
-driver = webdriver.Chrome()
-driver.get(link)
+    driver = webdriver.Chrome()
+    driver.get(link)
 
-for i in range(views):
-    ip_change()
-    time.sleep(Timer)
-    driver.refresh()
-    print(i)
-
+    for i in range(views):
+        if platform.system() == 'Darwin':
+            ip_change_macos()
+            print(platform.system())
+        elif platform.system() == 'Windows':
+            ip_change_windows()
+            print(platform.system())
+        elif platform.system() == 'Linux':
+            ip_change_linux()
+            print(platform.system())
+        time.sleep(Timer)
+        driver.refresh()
+        print(i)
+except:
+    print("wrong url")
